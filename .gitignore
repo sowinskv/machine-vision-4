@@ -8,5 +8,35 @@ wheels/
 
 # Virtual environments
 .venv
+venv/
+env/
 
+# Project outputs
+outputs/
+data/
+
+# Logs and scripts
+*.log
+*.sh
+
+# Training artifacts
+*.keras
+*.h5
+*.weights.h5
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Template
 README_style.md
+
+# Claude
+.claude/

@@ -13,16 +13,21 @@ def plot_model_architecture(model, save_path):
         model: Keras model
         save_path: Path to save the diagram (e.g., 'model_architecture.png')
     """
-    plot_model(
-        model,
-        to_file=save_path,
-        show_shapes=True,
-        show_layer_names=True,
-        rankdir='TB',  # Top to bottom
-        dpi=150,
-        show_layer_activations=True
-    )
-    print(f"✓ Model architecture saved to {save_path}")
+    try:
+        plot_model(
+            model,
+            to_file=save_path,
+            show_shapes=True,
+            show_layer_names=True,
+            rankdir='TB',
+            dpi=150,
+            show_layer_activations=True
+        )
+        print(f"✓ Model architecture saved to {save_path}")
+    except ImportError as e:
+        print(f"⚠ Warning: Could not generate architecture diagram")
+        print(f"  Install graphviz: brew install graphviz")
+        print(f"  Skipping architecture visualization...")
 
 
 def plot_training_history(history, save_path):
