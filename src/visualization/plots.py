@@ -40,25 +40,33 @@ def plot_training_history(history, save_path):
         history: Keras History object from model.fit()
         save_path: Path to save the plot
     """
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 
-    # Accuracy plot
-    axes[0].plot(history.history['accuracy'], label='Training Accuracy', linewidth=2)
-    axes[0].plot(history.history['val_accuracy'], label='Validation Accuracy', linewidth=2)
-    axes[0].set_title('Model Accuracy', fontsize=14, fontweight='bold')
-    axes[0].set_xlabel('Epoch', fontsize=12)
-    axes[0].set_ylabel('Accuracy', fontsize=12)
-    axes[0].legend(fontsize=10)
-    axes[0].grid(True, alpha=0.3)
+    epochs = range(1, len(history.history['accuracy']) + 1)
 
-    # Loss plot
-    axes[1].plot(history.history['loss'], label='Training Loss', linewidth=2)
-    axes[1].plot(history.history['val_loss'], label='Validation Loss', linewidth=2)
-    axes[1].set_title('Model Loss', fontsize=14, fontweight='bold')
-    axes[1].set_xlabel('Epoch', fontsize=12)
-    axes[1].set_ylabel('Loss', fontsize=12)
-    axes[1].legend(fontsize=10)
-    axes[1].grid(True, alpha=0.3)
+    axes[0].plot(epochs, history.history['accuracy'],
+                 label='Train', linewidth=1.2, color='#3266cc', alpha=0.8)
+    axes[0].plot(epochs, history.history['val_accuracy'],
+                 label='Validation', linewidth=1.2, color='#dc3912', alpha=0.8)
+    axes[0].set_xlabel('Epoch', fontsize=9)
+    axes[0].set_ylabel('Accuracy', fontsize=9)
+    axes[0].legend(fontsize=8, frameon=False)
+    axes[0].spines[['top', 'right']].set_visible(False)
+    axes[0].spines[['left', 'bottom']].set_linewidth(0.5)
+    axes[0].tick_params(labelsize=8)
+    axes[0].grid(True, alpha=0.2, linewidth=0.5)
+
+    axes[1].plot(epochs, history.history['loss'],
+                 label='Train', linewidth=1.2, color='#3266cc', alpha=0.8)
+    axes[1].plot(epochs, history.history['val_loss'],
+                 label='Validation', linewidth=1.2, color='#dc3912', alpha=0.8)
+    axes[1].set_xlabel('Epoch', fontsize=9)
+    axes[1].set_ylabel('Loss', fontsize=9)
+    axes[1].legend(fontsize=8, frameon=False)
+    axes[1].spines[['top', 'right']].set_visible(False)
+    axes[1].spines[['left', 'bottom']].set_linewidth(0.5)
+    axes[1].tick_params(labelsize=8)
+    axes[1].grid(True, alpha=0.2, linewidth=0.5)
 
     plt.tight_layout()
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -76,7 +84,6 @@ def plot_confusion_matrix(y_true, y_pred, class_names, save_path):
         class_names: List of class names
         save_path: Path to save the plot
     """
-    # Convert one-hot to class indices if needed
     if len(y_true.shape) > 1:
         y_true = np.argmax(y_true, axis=1)
     if len(y_pred.shape) > 1:
@@ -84,7 +91,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names, save_path):
 
     cm = confusion_matrix(y_true, y_pred)
 
-    plt.figure(figsize=(12, 10))
+    fig, ax = plt.subplots(figsize=(9, 8))
     sns.heatmap(
         cm,
         annot=True,
@@ -92,14 +99,14 @@ def plot_confusion_matrix(y_true, y_pred, class_names, save_path):
         cmap='Blues',
         xticklabels=class_names,
         yticklabels=class_names,
-        cbar_kws={'label': 'Count'},
-        square=True
+        linewidths=0.3,
+        linecolor='white',
+        annot_kws={'size': 8},
+        cbar_kws={'shrink': 0.8}
     )
-    plt.title('Confusion Matrix - CIFAR-10 CNN', fontsize=16, fontweight='bold', pad=20)
-    plt.ylabel('True Label', fontsize=12)
-    plt.xlabel('Predicted Label', fontsize=12)
-    plt.xticks(rotation=45, ha='right')
-    plt.yticks(rotation=0)
+    ax.set_xlabel('Predicted', fontsize=10)
+    ax.set_ylabel('True', fontsize=10)
+    ax.tick_params(labelsize=9)
     plt.tight_layout()
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
     plt.close()
