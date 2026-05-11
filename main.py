@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-"""
-CIFAR-10 CNN Image Classification
-University ML Project
-
-Target: >80% test accuracy for 14 points
-Expected: 85-88% with research-backed VGG-3 architecture
-"""
-
 import os
 import numpy as np
 
@@ -36,10 +27,10 @@ from src.visualization.metrics import (
 
 def main():
     print("=" * 70)
-    print(" " * 15 + "CIFAR-10 CNN IMAGE CLASSIFICATION")
+    print(" " * 15 + "CIFAR-10 CNN image classification")
     print("=" * 70)
-    print("\nTarget: >80% test accuracy (14 points)")
-    print("Expected: 85-88% with VGG-3 + BatchNorm + Augmentation")
+    print("\ntarget: >80% test accuracy")
+    print("expected: 85-88% with VGG-3 + BatchNorm + augmentation")
     print("=" * 70)
 
     OPTIMIZER_TYPE = 'sgd'
@@ -51,50 +42,50 @@ def main():
     CONFUSION_PATH = 'outputs/plots/confusion_matrix.png'
     METRICS_PATH = 'outputs/reports/metrics.json'
 
-    print(f"\n[CONFIG] Optimizer: {OPTIMIZER_TYPE.upper()}")
-    print(f"[CONFIG] Epochs: {EPOCHS}")
-    print(f"[CONFIG] Batch size: {BATCH_SIZE}")
+    print(f"\n[config] optimizer: {OPTIMIZER_TYPE.upper()}")
+    print(f"[config] epochs: {EPOCHS}")
+    print(f"[config] batch size: {BATCH_SIZE}")
     print()
 
     print("\n" + "=" * 70)
-    print("[1/7] LOADING CIFAR-10 DATA")
+    print("[1/7] loading CIFAR-10 data")
     print("=" * 70)
 
     X_train, y_train, X_test, y_test = load_cifar10_data()
-    print(f"✓ Raw data loaded")
-    print(f"  Training samples: {X_train.shape[0]:,}")
-    print(f"  Test samples: {X_test.shape[0]:,}")
-    print(f"  Image shape: {X_train.shape[1:]}")
+    print(f"✓ raw data loaded")
+    print(f"  training samples: {X_train.shape[0]:,}")
+    print(f"  test samples: {X_test.shape[0]:,}")
+    print(f"  image shape: {X_train.shape[1:]}")
 
-    print("\n[PREPROCESSING] Applying z-score normalization...")
+    print("\n[preprocessing] applying z-score normalization...")
     X_train, y_train, X_test, y_test = preprocess_data(
         X_train, y_train, X_test, y_test
     )
-    print(f"✓ Z-score normalization applied (per-channel mean/std)")
-    print(f"✓ Labels one-hot encoded (10 classes)")
+    print(f"✓ z-score normalization applied (per-channel mean/std)")
+    print(f"✓ labels one-hot encoded (10 classes)")
 
     print("\n" + "=" * 70)
-    print("[2/7] BUILDING CNN MODEL")
+    print("[2/7] building CNN model")
     print("=" * 70)
 
     model = build_cifar10_cnn(optimizer_type=OPTIMIZER_TYPE)
     print(f"✓ VGG-3 model built with {OPTIMIZER_TYPE.upper()} optimizer")
-    print(f"  Total layers: {len(model.layers)}")
-    print(f"  Total parameters: {model.count_params():,}")
+    print(f"  total layers: {len(model.layers)}")
+    print(f"  total parameters: {model.count_params():,}")
 
-    print("\nModel Architecture:")
+    print("\nmodel architecture:")
     print("-" * 70)
     model.summary()
     print("-" * 70)
 
     print("\n" + "=" * 70)
-    print("[3/7] GENERATING ARCHITECTURE DIAGRAM")
+    print("[3/7] generating architecture diagram")
     print("=" * 70)
 
     plot_model_architecture(model, ARCHITECTURE_PATH)
 
     print("\n" + "=" * 70)
-    print("[4/7] SETTING UP DATA AUGMENTATION")
+    print("[4/7] setting up data augmentation")
     print("=" * 70)
 
     datagen = create_data_generator()
@@ -102,14 +93,14 @@ def main():
     train_generator = datagen.flow(X_train, y_train, batch_size=BATCH_SIZE)
     steps_per_epoch = len(X_train) // BATCH_SIZE
 
-    print("✓ Data augmentation configured:")
-    print("  - Horizontal flip: True")
-    print("  - Width shift: ±10%")
-    print("  - Height shift: ±10%")
-    print(f"  - Steps per epoch: {steps_per_epoch}")
+    print("✓ data augmentation configured:")
+    print("  - horizontal flip: True")
+    print("  - width shift: ±10%")
+    print("  - height shift: ±10%")
+    print(f"  - steps per epoch: {steps_per_epoch}")
 
     print("\n" + "=" * 70)
-    print("[5/7] TRAINING MODEL")
+    print("[5/7] training model")
     print("=" * 70)
 
     if OPTIMIZER_TYPE == 'sgd':
@@ -119,7 +110,7 @@ def main():
         callbacks = create_callbacks_adam(MODEL_PATH)
         print("✓ Adam callbacks: ReduceLROnPlateau + ModelCheckpoint")
 
-    print(f"\nTraining for {EPOCHS} epochs...")
+    print(f"\ntraining for {EPOCHS} epochs...")
     print("-" * 70)
 
     history = train_model(
@@ -132,53 +123,53 @@ def main():
     )
 
     print("-" * 70)
-    print("✓ Training complete")
+    print("✓ training complete")
 
     print("\n" + "=" * 70)
-    print("[6/7] EVALUATING MODEL ON TEST SET")
+    print("[6/7] evaluating model on test set")
     print("=" * 70)
 
     test_metrics = evaluate_model(model, X_test, y_test)
     test_acc = test_metrics['test_accuracy']
     test_loss = test_metrics['test_loss']
 
-    print(f"\n{'TEST RESULTS':^70}")
+    print(f"\n{'test results':^70}")
     print("=" * 70)
-    print(f"  Test Accuracy: {test_acc * 100:.2f}%")
-    print(f"  Test Loss: {test_loss:.4f}")
+    print(f"  test accuracy: {test_acc * 100:.2f}%")
+    print(f"  test loss: {test_loss:.4f}")
     print("=" * 70)
 
     if test_acc >= 0.80:
         points = 14
-        grade_msg = "🎉 EXCELLENT - 14 points!"
+        grade_msg = "🎉 excellent - 14 points!"
     elif test_acc >= 0.78:
         points = 12
-        grade_msg = "✓ Very Good - 12 points"
+        grade_msg = "✓ very good - 12 points"
     elif test_acc >= 0.70:
         points = 9
-        grade_msg = "✓ Good - 9 points"
+        grade_msg = "✓ good - 9 points"
     elif test_acc >= 0.60:
         points = 7
-        grade_msg = "Acceptable - 7 points"
+        grade_msg = "acceptable - 7 points"
     else:
         points = 0
-        grade_msg = "Below threshold - 0 points"
+        grade_msg = "below threshold - 0 points"
 
-    print(f"\n  Grade: {grade_msg}\n")
+    print(f"\n  grade: {grade_msg}\n")
 
     print("=" * 70)
-    print("[7/7] GENERATING VISUALIZATIONS AND REPORTS")
+    print("[7/7] generating visualizations and reports")
     print("=" * 70)
 
-    print("\n[Visualization 1/2] Training history...")
+    print("\n[visualization 1/2] training history...")
     plot_training_history(history, HISTORY_PATH)
 
-    print("[Visualization 2/2] Confusion matrix...")
+    print("[visualization 2/2] confusion matrix...")
     y_pred = model.predict(X_test, verbose=0)
     class_names = get_class_names()
     plot_confusion_matrix(y_test, y_pred, class_names, CONFUSION_PATH)
 
-    print("\n[Report] Generating classification metrics...")
+    print("\n[report] generating classification metrics...")
     classification_rep = generate_classification_report(
         y_test, y_pred, class_names
     )
@@ -201,20 +192,20 @@ def main():
     save_metrics_to_json(all_metrics, METRICS_PATH)
 
     print("\n" + "=" * 70)
-    print(" " * 25 + "TRAINING COMPLETE")
+    print(" " * 25 + "training complete")
     print("=" * 70)
-    print(f"\n  Final Test Accuracy: {test_acc * 100:.2f}%")
-    print(f"  Grade: {grade_msg}")
+    print(f"\n  final test accuracy: {test_acc * 100:.2f}%")
+    print(f"  grade: {grade_msg}")
     print("\n" + "=" * 70)
-    print("OUTPUTS GENERATED:")
+    print("outputs generated:")
     print("=" * 70)
-    print(f"  ✓ Model: {MODEL_PATH}")
-    print(f"  ✓ Architecture: {ARCHITECTURE_PATH}")
-    print(f"  ✓ Training history: {HISTORY_PATH}")
-    print(f"  ✓ Confusion matrix: {CONFUSION_PATH}")
-    print(f"  ✓ Metrics report: {METRICS_PATH}")
+    print(f"  ✓ model: {MODEL_PATH}")
+    print(f"  ✓ architecture: {ARCHITECTURE_PATH}")
+    print(f"  ✓ training history: {HISTORY_PATH}")
+    print(f"  ✓ confusion matrix: {CONFUSION_PATH}")
+    print(f"  ✓ metrics report: {METRICS_PATH}")
     print("=" * 70)
-    print("\n🎓 Ready for submission!\n")
+    print("\n🎓 ready for submission!\n")
 
 
 if __name__ == "__main__":
