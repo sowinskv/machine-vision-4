@@ -148,7 +148,6 @@ def main():
     print(f"  Test Loss: {test_loss:.4f}")
     print("=" * 70)
 
-    # Determine grade
     if test_acc >= 0.80:
         points = 14
         grade_msg = "🎉 EXCELLENT - 14 points!"

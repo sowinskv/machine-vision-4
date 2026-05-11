@@ -32,6 +32,7 @@ increasing dropout: 0.2 → 0.3 → 0.4 to prevent overfitting.
 Flatten → Dense(128) → BatchNormalization → ReLU → Dropout(0.5) → Dense(10, softmax).
 
 **01.3 — regularization**
+
 - kernel_initializer='he_uniform' on all Conv2D/Dense (prevents vanishing gradients in deep ReLU networks)
 - L2 weight decay (1e-4) on all weight layers
 - increasing dropout schedule across depth
@@ -98,46 +99,10 @@ tail -f training.log
 ```
 
 outputs generated automatically:
+
 - `outputs/models/cifar10_model.keras`
 - `outputs/plots/training_history.png`
 - `outputs/plots/confusion_matrix.png`
 - `outputs/reports/metrics.json`
-
----
-
-## 05 — Results
-
-**expected performance:** 85–88% test accuracy (published reproductions: Brownlee/MachineLearningMastery, geifmany/cifar-vgg).
-
-**grading threshold:**
-- ≥80%: 14 points (target met)
-- 78–79%: 12 points
-- 70–77%: 9 points
-- 60–69%: 7 points
-- <60%: 0 points
-
-**accuracy ladder** (empirical, same VGG-3 baseline):
-```
-baseline (no regularization)           73%
-+ fixed dropout 0.2                    83%
-+ data augmentation                    84%
-+ increasing dropout                   85%
-+ BatchNormalization                   88%  ← this implementation
-```
-
-**05.1 — deliverables**
-all project requirements satisfied:
-- network architecture visualization (requires graphviz for diagram)
-- trained model (.keras format)
-- confusion matrix (10×10 heatmap)
-- training history plots (accuracy/loss curves)
-- test accuracy report (console + JSON)
-- source code
-
-**05.2 — validation**
-no information leakage. z-score mean/std computed only on training data.
-augmentation applied only during training. test set unseen until final evaluation.
-
-temporal order preserved (CIFAR-10 is not time-series, but preprocessing follows best practices: fit on train, transform test).
 
 ---
